@@ -8,20 +8,20 @@ namespace ContactsApp.Models
         [Key]
         public Guid Id { get;set; }
 
-        [Required]
+        [Required(ErrorMessage = "Mobile Phone is required")]
         public string Name { get;set; }
 
-        [Required]
+        [Required(ErrorMessage = "Mobile Phone is required")]
         [DisplayName("Mobile Phone")]
         public string MobilePhone { get;set; }
 
-        [Required]
+        [Required(ErrorMessage = "Job Title is required")]
         [DisplayName("Job Title")]
         public string JobTitle { get;set; }
 
-        [Required]
+        [Required(ErrorMessage = "Birth Date is required")]
         [DisplayName("Birth Date")]
-        public DateOnly BirthDate { get;set; }
+        public DateTime BirthDate {get;set;}
 
     }
 }

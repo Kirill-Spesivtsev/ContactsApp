@@ -43,6 +43,10 @@ function GetContacts() {
 }
 
 function AddContact() {
+    if (!ValidateContact()) {
+        return;
+    }
+
     let model = new Object();
     model.name = $('#inputName').val();
     model.mobilePhone = $('#inputMobilePhone').val();
@@ -69,7 +73,6 @@ function AddContact() {
 }
 
 function FetchContact(id) {
-
     $.ajax({
         url: 'Contacts/GetById?id=' + id,
         type: 'get',
@@ -98,6 +101,10 @@ function FetchContact(id) {
 }
 
 function UpdateContact() {
+    if (!ValidateContact()) {
+        return;
+    }
+
     let model = new Object();
     model.id = $('#inputId').val();
     model.name = $('#inputName').val();
@@ -143,8 +150,78 @@ function DeleteContact(id) {
     }
 }
 
-function HidePopup() {
+function ValidateContact() {
+    let name = document.getElementById('inputName');
+    let mobilePhone = document.getElementById('inputMobilePhone');
+    let jobTitle = document.getElementById('inputJobTitle');
+    let birthDate = document.getElementById('inputBirthDate');
+    let nameError = document.getElementById('inputName-error');
+    let mobilePhoneError = document.getElementById('inputMobilePhone-error');
+    let jobTitleError = document.getElementById('inputJobTitle-error');
+    let birthDateError = document.getElementById('inputBirthDate-error');
+    const phoneRegExp = /^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,6}$/;
+    const today = new Date();
+    let approved = true;
+
+    if (name.value == '') {
+        nameError.innerText = "Name shouldn't be empty";
+        approved = false;
+    }
+    else if (name.value.length > 40) {
+        nameError.innerText = "Name shouldn't be longer than 40 symbols";
+        approved = false;
+    }
+    else {
+        nameError.innerText = '';
+    }
+
+    if (mobilePhone.value == '') {
+        mobilePhoneError.innerText = "Mobile Phone shouldn't be empty";
+        approved = false;
+    }
+    else if (mobilePhone.value.length > 15) {
+        mobilePhoneError.innerText = "Mobile Phone shouldn't be longer than 15 symbols";
+        approved = false;
+    }
+    else if (!phoneRegExp.test(mobilePhone.value)) {
+        mobilePhoneError.innerText = "Mobile Phone is not in valid format";
+        approved = false;
+    }
+    else {
+        mobilePhoneError.innerText = '';
+    }
+    
+    if (jobTitle.value == '') {
+        jobTitleError.innerText = "Job Title shouldn't be empty";
+        approved = false;
+    }
+    else if (jobTitle.value.length > 50) {
+        jobTitleError.innerText = "Job Title shouldn't be longer than 50 symbols";
+        approved = false;
+    }
+    else {
+        jobTitleError.innerText = '';
+    }
+
+    if (birthDate.value == '') {
+        birthDateError.innerText = "Birth Date shouldn't be empty";
+        approved = false;
+    }
+    else if (birthDate.value < '1900-00-00' || birthDate.value > today.toISOString().slice(0,10)) {
+        birthDateError.innerText = "Birth Date is invalid";
+        approved = false;
+    }
+    else {
+        birthDateError.innerText = '';
+    }
+
+    return approved;
+}
+
+function HidePopupForm() {
     $('#contactPopupForm').modal('hide');
+    ClearValidationWarnings();
+    ClearForm();
 }
 
 function ClearForm() {
@@ -152,6 +229,13 @@ function ClearForm() {
     $('#inputMobilePhone').val('');
     $('#inputJobTitle').val('');
     $('#inputBirthDate').val('');
+}
+
+function ClearValidationWarnings() {
+    $('#inputName-error').text('');
+    $('#inputMobilePhone-error').text('');
+    $('#inputJobTitle-error').text('');
+    $('#inputBirthDate-error').text('');
 }
 
 function FormatDate(dateStr) {

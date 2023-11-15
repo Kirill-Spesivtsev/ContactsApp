@@ -10,8 +10,8 @@
     <button class="btn btn-primary mb-2" id="buttonAddContact">Create New</button>
 </div>
 <div class="container">
-    <table class="table table-striped table-responsive table-hover">
-        <thead>
+    <table class="table table-responsive table-bordered table-hover">
+        <thead class="table-light">
             <tr>
                 <th>
                     @Html.DisplayNameFor(model => model.Name)
@@ -47,28 +47,28 @@
                 <div class="form-floating mb-3">
                     <input class="form-control" type="text" asp-for="Name" id="inputName" />
                     <label asp-for="Name"></label>
-                    <span asp-validation-for="Name" class="text-danger"></span>
+                    <span id="inputName-error" class="text-danger field-validation-error"></span>
                 </div>
                 <div class="form-floating mb-3">
                     <input class="form-control" type="text" asp-for="MobilePhone" id="inputMobilePhone" />
                     <label asp-for="MobilePhone"></label>
-                    <span asp-validation-for="MobilePhone" class="text-danger"></span>
+                    <span id="inputMobilePhone-error" class="text-danger field-validation-error"></span>
                 </div>
                 <div class="form-floating mb-3">
                     <input class="form-control" type="text" asp-for="JobTitle" id="inputJobTitle" />
                     <label asp-for="JobTitle"></label>
-                    <span asp-validation-for="JobTitle" class="text-danger"></span>
+                    <span id="inputJobTitle-error" class="text-danger field-validation-error"></span>
                 </div>
                 <div class="form-floating mb-3">
                     <input class="form-control" type="date" asp-for="BirthDate" id="inputBirthDate" asp-format="{0:yyyy-MM-dd}" />
                     <label asp-for="BirthDate"></label>
-                    <span asp-validation-for="BirthDate" class="text-danger"></span>
+                    <span id="inputBirthDate-error" class="text-danger field-validation-error"></span>
                 </div>
             </div>
             <div class="modal-footer">
                 <button id="addContact" class="btn btn-success" onclick="AddContact()">Add</button>
                 <button id="updateContact" class="btn btn-success hidden" onclick="UpdateContact()">Update</button>
-                <button class="btn btn-secondary" onclick="HideForm()" data-bs-dismiss="modal">Close</button>
+                <button class="btn btn-secondary" onclick="HidePopupForm()">Close</button>
             </div>
         </div>
     </div>

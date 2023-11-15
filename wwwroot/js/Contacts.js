@@ -63,7 +63,6 @@ function AddContact() {
             }
             else {
                 GetContacts();
-                alert("Done!");
             }
         },
         error: function () {

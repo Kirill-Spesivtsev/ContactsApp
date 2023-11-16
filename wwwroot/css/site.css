@@ -20,3 +20,26 @@ body {
 .hidden{
     display:none;
 }
+
+.visible {
+    display: block;
+}
+
+.control-row {
+    height: 3.4rem;
+    display: block;
+}
+
+.leaned-right {
+    float: right;
+}
+
+.table-equal-cols {
+   table-layout: fixed;
+}
+
+.text-cutout {
+    text-overflow: clip;
+    white-space: nowrap;
+    overflow: hidden;
+}

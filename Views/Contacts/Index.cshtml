@@ -1,16 +1,16 @@
 ﻿@model ContactsApp.Models.Contact
 
-@{
-    ViewData["Title"] = "List of Contacts";
-}
-
-<h1>Index</h1>
-
-<div>
-    <button class="btn btn-primary mb-2" id="buttonAddContact">Create New</button>
+<div id="successAlert" class="alert alert-success alert-dismissible position-absolute hidden ms-3">
+    <span id="successAlertText" class="text-cutout"></span>
 </div>
-<div class="container">
-    <table class="table table-responsive table-bordered table-hover">
+
+<div class="pt-2 pb-2 control-row">
+    <h2 class="text-center" style="margin-bottom:-30px;">Contacts</h2>
+    <button class="btn btn-primary mb-2 me-3 leaned-right" id="buttonAddContact">Create New</button>
+</div>
+
+<div class="container mt-3">
+    <table class="table table-responsive table-bordered table-hover table-equal-cols">
         <thead class="table-light">
             <tr>
                 <th>
@@ -31,9 +31,16 @@
             </tr>
         </thead>
         <tbody id="tableBody">
-
         </tbody>
     </table>
+</div>
+
+<div class="hidden" id="contactsTableSpinner">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-success mt-5 text-center" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 </div>
 
 <div class="modal" id="contactPopupForm">
@@ -43,7 +50,12 @@
                 <h4 class="modal-title" id="contactFormTitle"></h4>
             </div>
             <div class="modal-body">
-            <input type="hidden" asp-for="Id" id="inputId" />
+                <div id="errorAlert" class="alert alert-danger alert-dismissible collapse hidden">
+                    <strong>Error! </strong>
+                    <span id="errorAlertText"></span>
+                    <button id="errorAlertClose" class="btn-close" href="#"></button>
+                </div>
+                <input type="hidden" asp-for="Id" id="inputId" />
                 <div class="form-floating mb-3">
                     <input class="form-control" type="text" asp-for="Name" id="inputName" />
                     <label asp-for="Name"></label>
@@ -66,9 +78,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="addContact" class="btn btn-success" onclick="AddContact()">Add</button>
-                <button id="updateContact" class="btn btn-success hidden" onclick="UpdateContact()">Update</button>
-                <button class="btn btn-secondary" onclick="HidePopupForm()">Close</button>
+                <button id="addContact" class="btn btn-success btn-lg" onclick="AddContact()">Add</button>
+                <button id="updateContact" class="btn btn-success btn-lg hidden" onclick="UpdateContact()">Update</button>
+                <button class="btn btn-secondary btn-lg" onclick="HidePopupForm()">Close</button>
             </div>
         </div>
     </div>

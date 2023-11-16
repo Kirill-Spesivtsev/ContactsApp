@@ -3,13 +3,14 @@ $(document).ready(function () {
 });
 
 $('#buttonAddContact').click(function () {
-    $('#contactPopupForm').modal('show');
     $('#contactFormTitle').text('Add Contact');
     $('#addContact').css('display', 'block');
     $('#updateContact').css('display', 'none');
+    $('#contactPopupForm').modal('show');
 })
 
 function GetContacts() {
+    $('#contactsTableSpinner').css('display', 'block');
     $.ajax({
         url: 'Contacts/List',
         type: 'get',
@@ -30,9 +31,10 @@ function GetContacts() {
                     object += '<td>' + item.mobilePhone + '</td>';
                     object += '<td>' + item.jobTitle + '</td>';
                     object += '<td>' + FormatDate(item.birthDate) + '</td>';
-                    object += '<td> <a href="#" class="btn btn-primary btn-sm ms-1" onclick="FetchContact(' + "'" + item.id + "'" +')">Edit</a>';
-                    object += '<a href="#" class="btn btn-danger btn-sm ms-1" onclick="DeleteContact(' + "'" + item.id + "'" + ')">Delete</a></td>';
+                    object += '<td> <a href="#" class="btn btn-outline-primary btn-sm ms-1" onclick="FetchContact(' + "'" + item.id + "'" +')">Edit</a>';
+                    object += '<a href="#" class="btn btn-outline-danger btn-sm ms-1" onclick="DeleteContact(' + "'" + item.id + "'" + ')">Delete</a></td>';
                 });
+                $('#contactsTableSpinner').css('display', 'none');
                 $('#tableBody').html(object);
             }
         },
@@ -59,14 +61,16 @@ function AddContact() {
         type: 'post',
         success: function (response) {
             if (response == null || response == undefined || response.length == 0) {
-                alert('Unable to add Contact');
+                ShowErrorAlert('Unable to add Contact');
             }
             else {
+                HidePopupForm();
+                ShowSuccessAlert("Successfully Added");
                 GetContacts();
             }
         },
         error: function () {
-            alert('Unable to add Contact');
+            ShowErrorAlert('Unable to add Contact');
         }
     });
 }
@@ -79,7 +83,7 @@ function FetchContact(id) {
         contentType: 'application/json;charset=utf-8',
         success: function (response) {
             if (response == null || response == undefined || response.length == 0) {
-                alert('Unable to load Contact info');
+                ShowErrorAlert('Unable to load Contact info');
             }
             else {
                 $('#contactPopupForm').modal('show');
@@ -94,7 +98,7 @@ function FetchContact(id) {
             }
         },
         error: function () {
-            alert('Unable to load Contact info');
+            ShowErrorAlert('Unable to load Contact info');
         }
     });
 }
@@ -117,14 +121,16 @@ function UpdateContact() {
         type: 'post',
         success: function (response) {
             if (response == null || response == undefined || response.length == 0) {
-                alert('Unable to update Contact');
+                ShowErrorAlert('Unable to update Contact');
             }
             else {
+                HidePopupForm();
+                ShowSuccessAlert("Successfully Updated");
                 GetContacts();
             }
         },
         error: function () {
-            alert('Unable to update Contact');
+            ShowErrorAlert('Unable to update Contact');
         }
     });
 }
@@ -136,14 +142,15 @@ function DeleteContact(id) {
             type: 'post',
             success: function (response) {
                 if (response == null || response == undefined || response.length == 0) {
-                    alert('Unable to save');
+                    ShowErrorAlert('Unable to delete record');
                 }
                 else {
+                    ShowSuccessAlert("Successfully Deleted");
                     GetContacts();
                 }
             },
             error: function () {
-                alert('Unable to save');
+                ShowErrorAlert('Unable to delete record');
             }
         });
     }
@@ -158,8 +165,8 @@ function ValidateContact() {
     let mobilePhoneError = document.getElementById('inputMobilePhone-error');
     let jobTitleError = document.getElementById('inputJobTitle-error');
     let birthDateError = document.getElementById('inputBirthDate-error');
-    const phoneRegExp = /^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,6}$/;
-    const today = new Date();
+    const phoneRegExp = /^[\+]?[0-9]{0,3}[-\s\.]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/
+    let today = new Date();
     let approved = true;
 
     if (name.value == '') {
@@ -206,8 +213,8 @@ function ValidateContact() {
         birthDateError.innerText = "Birth Date shouldn't be empty";
         approved = false;
     }
-    else if (birthDate.value < '1900-00-00' || birthDate.value > today.toISOString().slice(0,10)) {
-        birthDateError.innerText = "Birth Date is invalid";
+    else if (birthDate.value < '1900-01-01' || birthDate.value > today.toISOString().slice(0,10)) {
+        birthDateError.innerText = "Birth Date should be in range between 01.01.1900 and today";
         approved = false;
     }
     else {
@@ -239,4 +246,23 @@ function ClearValidationWarnings() {
 
 function FormatDate(dateStr) {
     return dateStr.slice(0, 10).split("-").reverse().join('.');
+}
+
+function ShowErrorAlert(message) {
+    $('#errorAlertText').text(message);
+    $('#errorAlert').show('fade');
+    setTimeout(function () {
+        $('#errorAlert').hide(400);
+    }, 3000);
+    $('#errorAlertClose').click(function () {
+        $('#errorAlert').hide(400);
+    });
+}
+
+function ShowSuccessAlert(message) {
+    $('#successAlertText').text(message);
+    $('#successAlert').show(200);
+    setTimeout(function () {
+        $('#successAlert').hide(200);
+    }, 2000);
 }
